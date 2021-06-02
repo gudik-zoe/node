@@ -1,5 +1,4 @@
 import { HookNextFunction } from 'mongoose';
-
 import express from 'express';
 import { Error } from './models/error';
 const userRouter = require('./routes/userRouter');
@@ -17,7 +16,9 @@ app.use(
   ) => {
     const status = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json({ status, message, timeStamp: new Date() });
+    res
+      .status(status)
+      .json({ status, message, timeStamp: new Date(), data: error.data });
   }
 );
 mongoose

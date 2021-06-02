@@ -2,8 +2,8 @@ export interface UserModel {
   id: String;
   firstName: String;
   lastName: String;
-  password: String;
   email: String;
+  password: String;
   gender: String;
   temporaryPassword: String;
   temporaryPasswordCreationTs: String;
