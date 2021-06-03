@@ -4,10 +4,9 @@ import { UserModel } from '../models/user';
 const userController = require('../controllers/userController');
 const { body } = require('express-validator');
 const User = require('../../dist/collections/user.js');
+const isAuth = require('../middleware/isAuthenticated');
 
 const router = Router();
-
-router.get('/greeting', userController.greeting);
 
 router.post(
   '/create',
@@ -25,8 +24,11 @@ router.post(
       .normalizeEmail(),
     body('password')
       .trim()
-      .isLength({ min: 8 })
-      .withMessage('password is too short'),
+      .matches(
+        '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
+        'i'
+      )
+      .withMessage('password should be much more complicated '),
   ],
   userController.createUser
 );
@@ -34,5 +36,9 @@ router.post(
 router.get('/user/:userId', userController.getUserById);
 
 router.put('/update', userController.updateUser);
+
+router.get('/greeting', isAuth, (req, res, next) => {
+  res.json("hello world it's ahtuenticated");
+});
 
 module.exports = router;

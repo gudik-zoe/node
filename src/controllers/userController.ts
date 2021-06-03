@@ -6,14 +6,6 @@ const { validationResult } = require('express-validator');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 
-exports.greeting = (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  res.status(200).json('hello world');
-};
-
 exports.createUser = async (
   req: express.Request,
   res: express.Response,
