@@ -33,7 +33,7 @@ router.post(
   userController.createUser
 );
 
-router.get('/user/:userId', userController.getUserById);
+router.get('/:userId', userController.getUserById);
 
 router.put('/update', userController.updateUser);
 

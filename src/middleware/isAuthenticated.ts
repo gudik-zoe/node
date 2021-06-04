@@ -1,10 +1,7 @@
 var jwt = require('jsonwebtoken');
 import * as express from 'express';
 const errorHandler = require('../utility/errorHandler');
-// const {
-//   default: auth,
-// } = require('../../00-frontend-starting-setup/src/pages/Auth/Auth');
-// for rest API
+
 module.exports = (
   req: express.Request,
   res: express.Response,

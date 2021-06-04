@@ -30,7 +30,7 @@ exports.login = async (
     const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
       expiresIn: '1h',
     });
-    res.status(200).json({ token: token, userId: theUser.id.toString() });
+    res.status(200).json({ token });
   } catch (err) {
     next(err);
   }
