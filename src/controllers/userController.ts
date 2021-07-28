@@ -1,6 +1,7 @@
 import { UserModel } from '../models/user';
 import * as express from 'express';
 import { Error } from '../models/error';
+import { Role } from '../models/role';
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const errorHandler = require('../utility/errorHandler');
@@ -19,6 +20,7 @@ exports.createUser = async (
     const hashedPassword = await bcrypt.hash(receivedBody.password, 12);
     receivedBody.password = hashedPassword;
     const theUser = new User(receivedBody);
+    theUser.role = Role.USER;
     const savedUser = await theUser.save();
     return res.status(201).json(savedUser);
   } catch (err) {
@@ -35,7 +37,7 @@ exports.getUserById = async (
     const userId = req.params.userId;
     const theUser = await User.findById(userId);
     if (!theUser) {
-      throw errorHandler.userNotFound();
+      throw errorHandler.notFound('user');
     }
     return res.status(200).json(theUser);
   } catch (err) {
@@ -52,7 +54,7 @@ exports.updateUser = async (
     const receivedBody: UserModel = req.body;
     let theUser = await User.findById(receivedBody.id);
     if (!theUser) {
-      throw errorHandler.userNotFound();
+      throw errorHandler.notFound('user');
     }
     const updatedUser = await theUser.save();
     return res.status(200).json(updatedUser);

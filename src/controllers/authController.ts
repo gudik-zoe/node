@@ -26,7 +26,6 @@ exports.login = async (
     if (!passwordIsvalid) {
       throw errorHandler.invalidCredentials();
     }
-    console.log('password and mail are valid mabrouuk!');
     const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
       expiresIn: '1h',
     });

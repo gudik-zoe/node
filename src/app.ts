@@ -4,6 +4,7 @@ import { Error } from './models/error';
 const userRouter = require('./routes/userRouter');
 const authRouter = require('./routes/authRouter');
 const postRouter = require('./routes/postRouter');
+const menuRouter = require('./routes/menuRouter');
 const mongoose = require('mongoose');
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/post', postRouter);
+app.use('/menu', menuRouter);
 app.use(
   (
     error: Error,

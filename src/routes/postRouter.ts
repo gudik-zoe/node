@@ -9,6 +9,31 @@ const isAuth = require('../middleware/isAuthenticated');
 
 const router = Router();
 
-router.post('/create', isAuth, postController.createPost);
+router.post(
+  '/create',
+  isAuth,
+  [
+    body('text').trim().isLength({ min: 9 }).withMessage('text is too short'),
+    body('imageUrl')
+      .trim()
+      .isLength({ min: 5 })
+      .withMessage('image Url must be a valid url'),
+  ],
+  postController.createPost
+);
+
+router.get('/:postId', isAuth, postController.getPostById);
+
+router.put(
+  '/',
+  isAuth,
+  [
+    body('text').trim().isLength({ min: 9 }).withMessage('text is too short'),
+    body('imageUrl').trim(),
+  ],
+  postController.updatePost
+);
+
+router.delete('/:postId', isAuth, postController.deletePost);
 
 module.exports = router;

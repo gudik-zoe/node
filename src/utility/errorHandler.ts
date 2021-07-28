@@ -7,14 +7,18 @@ exports.checkForError = (req: express.Request) => {
   if (!errors.isEmpty()) {
     const error = new Error('validation failed');
     error.statusCode = 422;
-    error.data = errors.array();
+    const errorsMessage = [];
+    for (let error of errors.array()) {
+      errorsMessage.push(error.msg);
+    }
+    error.data = errorsMessage;
     return error;
   }
   return null;
 };
 
-exports.userNotFound = () => {
-  const error = new Error('user not found');
+exports.notFound = (entity: string) => {
+  const error = new Error(entity + ' not found');
   error.statusCode = 404;
   return error;
 };

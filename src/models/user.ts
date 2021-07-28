@@ -1,3 +1,4 @@
+const {Role} = require("../models/role")
 export interface UserModel {
   id: String;
   firstName: String;
@@ -9,4 +10,5 @@ export interface UserModel {
   temporaryPasswordCreationTs: String;
   profilePhoto: String;
   from: String;
+  role:String;
 }
