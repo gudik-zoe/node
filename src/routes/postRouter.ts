@@ -11,7 +11,6 @@ const router = Router();
 
 router.post(
   '/create',
-  isAuth,
   [
     body('text').trim().isLength({ min: 9 }).withMessage('text is too short'),
     body('imageUrl')
@@ -34,6 +33,6 @@ router.put(
   postController.updatePost
 );
 
-router.delete('/:postId', isAuth, postController.deletePost);
+router.delete('/:postId',  postController.deletePost);
 
 module.exports = router;

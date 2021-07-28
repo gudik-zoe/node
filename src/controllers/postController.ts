@@ -16,14 +16,14 @@ exports.createPost = async (
     if (errorHandler.checkForError(req) != null) {
       throw errorHandler.checkForError(req);
     }
-    const creatorId = tokenDecoder.getUserIdFromToken(req);
+    // const creatorId = tokenDecoder.getUserIdFromToken(req);
     let postBody = req.body;
-    postBody.creator = creatorId;
+     postBody.creator = 2;
     const post = new Post(postBody);
     const savedPost = await post.save();
-    const user = await User.findById(creatorId);
-    user.posts.push(post.id);
-    const savedUser = await user.save();
+    // const user = await User.findById(creatorId);
+    // user.posts.push(post.id);
+    // const savedUser = await user.save();
     res.status(201).json(savedPost);
   } catch (err) {
     next(err);

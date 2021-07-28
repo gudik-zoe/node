@@ -29,8 +29,18 @@ exports.invalidCredentials = () => {
   return error;
 };
 
-exports.notAuthenticated = () => {
-  const error = new Error('not authorised');
+exports.notAuthenticated = (message:string = "not authorised") => {
+  const error = new Error(message);
   error.statusCode = 401;
   return error;
 };
+
+
+exports.badRequest = (message:string = "bad request") => {
+  const error = new Error(message);
+  error.statusCode = 400;
+  return error;
+};
+
+
+

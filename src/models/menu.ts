@@ -1,7 +1,9 @@
+import { ObjectId } from "mongoose";
 export class Menu {
-  private title!: string;
-  private description!: string;
-  private imageUrl!: string;
-  private price!: number;
-  private ingredients!: string[];
+  public id?:ObjectId
+  public title!: string;
+  public description!: string;
+  public imageUrl!: string;
+  public price!: number;
+  public ingredients!: string[];
 }
