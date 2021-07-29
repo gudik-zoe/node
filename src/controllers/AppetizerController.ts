@@ -1,22 +1,18 @@
-import express, { json } from 'express';
-import { isValidObjectId, Mongoose, Schema } from 'mongoose';
-import { Menu } from '../models/menu';
-
-const menuSchema = require('../../dist/collections/menu.js');
-const { MenuModel } = require('../models/menu');
+const appetizerSchema = require('../../dist/collections/appetizer.js');
 const { validationResult } = require('express-validator');
 const errorHandler = require('../utility/errorHandler');
 import mongoose from 'mongoose';
 import AbstractController from './AbstractController';
 
-class MenuController extends AbstractController<
+class AppetizerController extends AbstractController<
   mongoose.Model<mongoose.Document<any, any>, {}, {}>
 > {
-  getRepository(): mongoose.Model<mongoose.Document<'Menu', any>, {}, {}> {
-    return menuSchema;
+  getRepository(): mongoose.Model<mongoose.Document<'Appetizer', any>, {}, {}> {
+    console.log('appetizer repo');
+    return appetizerSchema;
   }
 }
-export default MenuController;
+export default AppetizerController;
 
 // exports.createMenu = async (
 //   req: express.Request,

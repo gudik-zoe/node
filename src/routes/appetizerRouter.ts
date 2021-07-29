@@ -1,12 +1,12 @@
 import { Router } from 'express';
 // import AbstractController from '../controllers/abstractController';
-import MenuController from '../controllers/MenuController';
+import appetizerController from '../controllers/appetizerController';
 const { body } = require('express-validator');
 const isAuthenticated = require('../middleware/isAuthenticated');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
-const menuSchema = require('../collections/menu');
-const theClass = new MenuController();
+const appetizerMenu = require('../collections/appetizer');
+const theClass = new appetizerController();
 // router.post(
 //   '/',
 //   [
@@ -23,6 +23,8 @@ const theClass = new MenuController();
 // );
 
 router.get('/', theClass.showEntity);
+
+// router.post('/', theClass.showEntity);
 
 // router.get('/:menuId' ,menuController.getMenuById);
 
