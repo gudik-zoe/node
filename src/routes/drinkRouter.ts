@@ -1,15 +1,13 @@
 import { Router } from 'express';
-import AppetizerController from '../controllers/AppetizerController';
+import DrinkController from '../controllers/DrinkController';
 const { body } = require('express-validator');
-const isAuthenticated = require('../middleware/isAuthenticated');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
-const menuSchema = require('../collections/menu');
-const theClass = new AppetizerController();
+const drinkController = new DrinkController();
 
-router.get('/', theClass.getMenus);
+router.get('/', drinkController.getMenus);
 
-router.get('/:id', theClass.getMenuById);
+router.get('/:id', drinkController.getMenuById);
 
 router.post(
   '/',
@@ -26,7 +24,7 @@ router.post(
     body('description').notEmpty().withMessage('this field is required'),
     body('ingredients').notEmpty().withMessage('this field is required'),
   ],
-  theClass.createMenu
+  drinkController.createMenu
 );
 
 router.put(
@@ -44,9 +42,9 @@ router.put(
     body('description').notEmpty().withMessage('this field is required'),
     body('ingredients').notEmpty().withMessage('this field is required'),
   ],
-  theClass.updateMenu
+  drinkController.updateMenu
 );
 
-router.delete('/:id', isAdmin, theClass.deleteMenu);
+router.delete('/:id', isAdmin, drinkController.deleteMenu);
 
 module.exports = router;

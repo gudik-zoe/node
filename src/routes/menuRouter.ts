@@ -1,43 +1,50 @@
 import { Router } from 'express';
-// import AbstractController from '../controllers/abstractController';
 import MenuController from '../controllers/MenuController';
 const { body } = require('express-validator');
-const isAuthenticated = require('../middleware/isAuthenticated');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
-const menuSchema = require('../collections/menu');
-const theClass = new MenuController();
-// router.post(
-//   '/',
-//   [
-//     body('title')
-//       .trim()
-//       .isLength({ min: 9 })
-//       .withMessage('title is too short').notEmpty().withMessage("title shouldn't be null"),
-//     body('imageUrl').isURL().withMessage('image Url must be a valid url'),
-//     body('price').notEmpty().withMessage('this field is required'),
-//     body('description').notEmpty().withMessage('this field is required'),
-//     body('ingredients').notEmpty().withMessage('this field is required'),
-//   ],
-//   menuController.createMenu
-// );
+const menuController = new MenuController();
 
-router.get('/', theClass.showEntity);
+router.get('/', menuController.getMenus);
 
-// router.get('/:menuId' ,menuController.getMenuById);
+router.get('/:id', menuController.getMenuById);
 
-// router.put('/' , [
-//   body('title')
-//     .trim()
-//     .isLength({ min: 9 })
-//     .notEmpty().withMessage("title is required")
-//     .withMessage('title is too short'),
-//   body('imageUrl').notEmpty().isURL().withMessage('image Url must be a valid url'),
-//   body('price').notEmpty().withMessage('this field is required'),
-//   body('description').notEmpty().withMessage('this field is required'),
-//   body('ingredients').notEmpty().withMessage('this field is required'),
-// ], isAdmin , menuController.updateMenu);
+router.post(
+  '/',
+  isAdmin,
+  [
+    body('title')
+      .trim()
+      .isLength({ min: 9 })
+      .withMessage('title is too short')
+      .notEmpty()
+      .withMessage("title shouldn't be null"),
+    body('imageUrl').isURL().withMessage('image Url must be a valid url'),
+    body('price').notEmpty().withMessage('this field is required'),
+    body('description').notEmpty().withMessage('this field is required'),
+    body('ingredients').notEmpty().withMessage('this field is required'),
+  ],
+  menuController.createMenu
+);
 
-// router.delete('/:menuId' , isAdmin ,menuController.deleteMenu )
+router.put(
+  '/',
+  isAdmin,
+  [
+    body('title')
+      .trim()
+      .isLength({ min: 9 })
+      .withMessage('title is too short')
+      .notEmpty()
+      .withMessage("title shouldn't be null"),
+    body('imageUrl').isURL().withMessage('image Url must be a valid url'),
+    body('price').notEmpty().withMessage('this field is required'),
+    body('description').notEmpty().withMessage('this field is required'),
+    body('ingredients').notEmpty().withMessage('this field is required'),
+  ],
+  menuController.updateMenu
+);
+
+router.delete('/:id', isAdmin, menuController.deleteMenu);
 
 module.exports = router;

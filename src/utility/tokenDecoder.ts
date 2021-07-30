@@ -1,6 +1,6 @@
 import * as express from 'express';
 var jwt = require('jsonwebtoken');
-import { Error } from '../models/error';
+const errorHandler = require('../utility/errorHandler');
 exports.getUserIdFromToken = (req: express.Request) => {
   let authHeader = req.get('Authorization');
   if (authHeader) {
@@ -8,7 +8,5 @@ exports.getUserIdFromToken = (req: express.Request) => {
     const decodedToken = jwt.verify(token, 'secrettissimo');
     return decodedToken.userId;
   }
-  const error = new Error('not authorised ');
-  error.statusCode = 401;
-  throw error;
+  throw errorHandler.notAuthenticated();
 };

@@ -6,6 +6,8 @@ const authRouter = require('./routes/authRouter');
 const postRouter = require('./routes/postRouter');
 const menuRouter = require('./routes/menuRouter');
 const appetizerRouter = require('./routes/appetizerRouter');
+const drinkRouter = require('./routes/drinkRouter');
+const dessertRouter = require('./routes/dessertRouter');
 const mongoose = require('mongoose');
 const app = express();
 
@@ -15,6 +17,8 @@ app.use('/auth', authRouter);
 app.use('/post', postRouter);
 app.use('/menu', menuRouter);
 app.use('/appetizer', appetizerRouter);
+app.use('/drink', drinkRouter);
+app.use('/dessert', dessertRouter);
 app.use(
   (
     error: Error,

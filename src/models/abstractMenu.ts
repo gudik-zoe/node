@@ -1,6 +1,6 @@
-import { ObjectId } from "mongoose";
-export class Menu {
-  public id?:ObjectId
+import { ObjectId } from 'mongoose';
+export class AbstractMenu {
+  public _id?: ObjectId;
   public title!: string;
   public description!: string;
   public imageUrl!: string;
