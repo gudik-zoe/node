@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import AppetizerController from '../controllers/AppetizerController';
+const itemController = require('../controllers/itemsController');
 const { body } = require('express-validator');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
-const appetizerController = new AppetizerController();
 
-router.get('/', appetizerController.getMenus);
+router.get('/category/:category', itemController.getItems);
 
-router.get('/:id', appetizerController.getMenuById);
+router.get('/:id', itemController.getItemById);
 
 router.post(
   '/',
@@ -20,11 +19,12 @@ router.post(
       .notEmpty()
       .withMessage("title shouldn't be null"),
     body('imageUrl').isURL().withMessage('image Url must be a valid url'),
-    body('price').notEmpty().withMessage('this field is required'),
-    body('description').notEmpty().withMessage('this field is required'),
-    body('ingredients').notEmpty().withMessage('this field is required'),
+    body('price').notEmpty().withMessage('price field is required'),
+    body('category').notEmpty().withMessage('category field is required'),
+    body('description').notEmpty().withMessage('description field is required'),
+    body('ingredients').notEmpty().withMessage('ingredients field is required'),
   ],
-  appetizerController.createMenu
+  itemController.createItem
 );
 
 router.put(
@@ -42,9 +42,9 @@ router.put(
     body('description').notEmpty().withMessage('this field is required'),
     body('ingredients').notEmpty().withMessage('this field is required'),
   ],
-  appetizerController.updateMenu
+  itemController.updateItem
 );
 
-router.delete('/:id', isAdmin, appetizerController.deleteMenu);
+router.delete('/:id', isAdmin, itemController.deleteItem);
 
 module.exports = router;

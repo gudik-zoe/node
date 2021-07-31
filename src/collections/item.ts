@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-const drinkSchema = new Schema({
+const itemSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -11,7 +11,7 @@ const drinkSchema = new Schema({
   },
   description: {
     type: String,
-    required: false,
+    required: true,
   },
   category: {
     type: String,
@@ -23,8 +23,8 @@ const drinkSchema = new Schema({
   },
   ingredients: {
     type: [{ type: String }],
-    required: false,
+    required: true,
   },
 });
 
-module.exports = mongoose.model('drink', drinkSchema);
+module.exports = mongoose.model('Item', itemSchema);

@@ -17,6 +17,10 @@ const dessertSchema = new Schema({
     type: Number,
     required: true,
   },
+  category: {
+    type: String,
+    required: true,
+  },
   ingredients: {
     type: [{ type: String }],
     required: true,

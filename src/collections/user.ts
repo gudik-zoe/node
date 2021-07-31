@@ -37,10 +37,11 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
-  role:{
-    type:String,
-    required:true
+  role: {
+    type: String,
+    required: true,
   },
+  cart: [{ type: Schema.Types.ObjectId, ref: 'Menu' }],
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
 

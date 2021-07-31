@@ -56,6 +56,7 @@ abstract class AbstractController<T> {
         throw errorHandler.checkForError(req);
       }
       let menuBody: AbstractMenu = req.body;
+      menuBody.category = this.getRepository().modelName;
       const abstractMenu = this.getRepository();
       const abstractEntityToSave = new abstractMenu(menuBody);
       const savedAbstractEntity = await abstractEntityToSave.save();

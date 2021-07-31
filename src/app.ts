@@ -8,6 +8,8 @@ const menuRouter = require('./routes/menuRouter');
 const appetizerRouter = require('./routes/appetizerRouter');
 const drinkRouter = require('./routes/drinkRouter');
 const dessertRouter = require('./routes/dessertRouter');
+const cartRouter = require('./routes/cartRouter');
+const itemRouter = require('./routes/itemRouter');
 const mongoose = require('mongoose');
 const app = express();
 
@@ -19,6 +21,8 @@ app.use('/menu', menuRouter);
 app.use('/appetizer', appetizerRouter);
 app.use('/drink', drinkRouter);
 app.use('/dessert', dessertRouter);
+app.use('/cart', cartRouter);
+app.use('/item', itemRouter);
 app.use(
   (
     error: Error,
@@ -27,7 +31,7 @@ app.use(
     next: express.NextFunction
   ) => {
     const status = error.statusCode || 500;
-    const message = error.message;
+    const message = error.message || 'unknown error occured';
     res
       .status(status)
       .json({ status, message, timeStamp: new Date(), data: error.data });
