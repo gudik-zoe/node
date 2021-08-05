@@ -1,12 +1,13 @@
 import { Router } from 'express';
 const cartController = require('../controllers/cartController');
 const { body } = require('express-validator');
-const isAdmin = require('../middleware/isAdmin');
+const isAuthenticated = require('../middleware/isAuthenticated');
 const router = Router();
-// const dessertController = new DessertController();
 
-// router.get('/', dessertController.getMenus);
+router.get('/', isAuthenticated, cartController.getMyCart);
 
-router.post('/', cartController.addItem);
+router.post('/', isAuthenticated, cartController.addItem);
+
+router.delete('/:itemId', isAuthenticated, cartController.deleteItem);
 
 module.exports = router;

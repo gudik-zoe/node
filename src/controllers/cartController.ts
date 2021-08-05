@@ -1,10 +1,13 @@
 import { error } from 'console';
 import * as express from 'express';
+import { isValidObjectId, ObjectId } from 'mongoose';
 import { AbstractMenu } from '../models/abstractMenu';
+import { AddToCart } from '../models/addToCart';
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 const Cart = require('../collections/cart');
+const Item = require('../collections/item');
 const tokenDecoder = require('../utility/tokenDecoder');
 
 exports.addItem = async (
@@ -13,47 +16,132 @@ exports.addItem = async (
   next: express.NextFunction
 ) => {
   try {
-    let itemsArray = req.body;
+    const receivedBody: AddToCart = req.body;
+    const userId = tokenDecoder.getUserIdFromToken(req);
+    const signedInUser = await User.findById(userId);
+    console.log(receivedBody);
+    if (!signedInUser) {
+      throw errorHandler.notFound('user');
+    }
+    const theItem = await Item.findById(receivedBody.itemId);
+
+    if (!theItem) {
+      throw errorHandler.notFound();
+    }
+
+    let theCart;
+    if (isValidObjectId(signedInUser.cart) && signedInUser.cart) {
+      theCart = await Cart.findById(signedInUser.cart);
+      if (theCart.items.length == 0) {
+        theCart.items = [];
+      }
+    } else {
+      theCart = new Cart();
+      theCart.user = signedInUser.id;
+      theCart.items = [];
+    }
+    const existItem = theCart.items.find(
+      (i: any) => i.itemId == receivedBody.itemId
+    );
+    if (existItem) {
+      existItem.quantity = existItem.quantity + receivedBody.quantity;
+      theCart.total = theCart.total + theItem.price * receivedBody.quantity;
+    } else {
+      theCart.items.push({
+        itemId: receivedBody.itemId,
+        quantity: receivedBody.quantity,
+      });
+      theCart.total =
+        theCart.total || 0 + theItem.price * receivedBody.quantity;
+    }
+    const savedCard = await theCart.save();
+    signedInUser.cart = savedCard.id;
+    const savedUser = await signedInUser.save();
+    res.status(200).json(savedCard);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.getMyCart = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
     const userId = tokenDecoder.getUserIdFromToken(req);
     const signedInUser = await User.findById(userId);
     if (!signedInUser) {
-      throw errorHandler.notfound('user');
+      throw errorHandler.notFound('user');
     }
-    const cart = new Cart();
-    // if (itemsArray || itemsArray.length > 0) {
-    for (let item of itemsArray) {
-      switch (item.category) {
-        case 'Menu':
-          console.log('menu');
-          cart.menus.push(item);
-          break;
-        case 'Drink':
-          console.log('Drink');
-          cart.drinks.push(item);
-          break;
-        case 'Dessert':
-          console.log('Dessert');
-          cart.desserts.push(item);
-          break;
-        case 'Appetizer':
-          console.log('Appetizer');
-          cart.appetizers.push(item);
-          break;
-        default:
-          console.log('weila');
-          break;
-      }
+    const theCart = await Cart.findById(signedInUser.cart);
+    if (!theCart) {
+      throw errorHandler.notFound('cart');
     }
-    console.log('arriving here');
-    // }
-    const savedCard = await cart.save();
-    if (!signedInUser.cart || signedInUser.cart == null) {
-      console.log('adding the cart to the user');
-      signedInUser.cart = savedCard;
-    }
-    const savedUser = signedInUser.save();
-    res.status(200).json(savedCard);
+    res.status(200).json(theCart);
   } catch (err) {
-    next(error);
+    next(err);
   }
 };
+
+exports.deleteItem = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const itemId = req.params.itemId;
+    const userId = tokenDecoder.getUserIdFromToken(req);
+    let itemToDeleteQuanity;
+    const signedInUser = await User.findById(userId);
+    if (!signedInUser) {
+      throw errorHandler.notFound('user');
+    }
+    let theCart = await Cart.findById(signedInUser.cart);
+    if (!theCart) {
+      throw errorHandler.notFound('cart');
+    }
+    const itemToDeleteInCart = theCart.items.find(
+      (i: any) => i.itemId == itemId
+    );
+    console.log(itemToDeleteInCart);
+    if (!itemToDeleteInCart) {
+      throw errorHandler.notFound('quantity');
+    }
+    console.log(itemToDeleteInCart.quantity);
+    itemToDeleteQuanity = itemToDeleteInCart.quantity;
+    const theItemToDelete = await Item.findById(itemId);
+
+    if (!theItemToDelete) {
+      throw errorHandler.notFound('item');
+    }
+    let theUpdatedCartItems = theCart.items.filter(
+      (i: any) => i.itemId != itemId
+    );
+
+    theCart.items = [...theUpdatedCartItems];
+    theCart.total = theCart.total - theItemToDelete.price * itemToDeleteQuanity;
+    if (theCart.total < 0) {
+      theCart.total = 0;
+      throw errorHandler.badRequest();
+    }
+    const savedCard = await theCart.save();
+    res.status(200).json(savedCard);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+async function getTotal(items: AddToCart[]): Promise<Number> {
+  let total = 0;
+  for (let item of items) {
+    const theItem = await Item.findById(item.itemId);
+    if (!theItem) {
+      throw errorHandler.notFound('item');
+    }
+    total += theItem.price * item.quantity;
+  }
+  return total;
+}

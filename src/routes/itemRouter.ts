@@ -4,7 +4,7 @@ const { body } = require('express-validator');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
 
-router.get('/category/:category', itemController.getItems);
+router.get('/', itemController.getItems);
 
 router.get('/:id', itemController.getItemById);
 

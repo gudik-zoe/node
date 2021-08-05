@@ -13,7 +13,7 @@ exports.getItems = async (
   try {
     const limit: number = Number(req.query.limit) || 4;
     const start: number = Number(req.query.start) || 1;
-    const category = req.params.category;
+    const category = req.query.category;
     console.log(category);
     const total: Number = await itemSchema
       .find({ category: category })

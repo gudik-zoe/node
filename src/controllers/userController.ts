@@ -1,11 +1,11 @@
 import { UserModel } from '../models/user';
 import * as express from 'express';
-import { Error } from '../models/error';
 import { Role } from '../models/role';
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
+const Cart = require('../collections/cart');
 
 exports.createUser = async (
   req: express.Request,
