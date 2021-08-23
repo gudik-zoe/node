@@ -107,7 +107,7 @@ exports.deleteItem = async (
     );
     console.log(itemToDeleteInCart);
     if (!itemToDeleteInCart) {
-      throw errorHandler.notFound('quantity');
+      throw errorHandler.notFound('item');
     }
     console.log(itemToDeleteInCart.quantity);
     itemToDeleteQuanity = itemToDeleteInCart.quantity;

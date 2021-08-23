@@ -10,6 +10,7 @@ const drinkRouter = require('./routes/drinkRouter');
 const dessertRouter = require('./routes/dessertRouter');
 const cartRouter = require('./routes/cartRouter');
 const itemRouter = require('./routes/itemRouter');
+const orderRouter = require('./routes/orderRouter');
 const mongoose = require('mongoose');
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/drink', drinkRouter);
 app.use('/dessert', dessertRouter);
 app.use('/cart', cartRouter);
 app.use('/item', itemRouter);
+app.use('/order', orderRouter);
 app.use(
   (
     error: Error,

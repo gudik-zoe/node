@@ -14,14 +14,21 @@ exports.getItems = async (
     const limit: number = Number(req.query.limit) || 4;
     const start: number = Number(req.query.start) || 1;
     const category = req.query.category;
-    console.log(category);
-    const total: Number = await itemSchema
-      .find({ category: category })
-      .countDocuments();
-    const result = await itemSchema
-      .find({ category: category })
-      .skip(start - 1)
-      .limit(limit);
+    let result;
+    let total: Number;
+    if (!category) {
+      total = await itemSchema.find().countDocuments();
+      result = await itemSchema
+        .find()
+        .skip(start - 1)
+        .limit(limit);
+    } else {
+      total = await itemSchema.find({ category }).countDocuments();
+      result = await itemSchema
+        .find({ category })
+        .skip(start - 1)
+        .limit(limit);
+    }
     if (!result) {
       throw errorHandler.notFound();
     }
