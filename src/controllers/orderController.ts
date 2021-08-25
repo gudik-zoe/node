@@ -23,6 +23,11 @@ exports.addOrder = async (
     order.user = userId;
     order.items = theCart.items;
     const theOrder = await order.save();
+    if (theOrder) {
+      theCart.items = [];
+      theCart.total = 0;
+      const savedCart = await theCart.save();
+    }
     return res.json(theOrder);
   } catch (err) {
     next(err);
@@ -35,8 +40,26 @@ exports.getOrders = async (
   next: express.NextFunction
 ) => {
   try {
+    const total = await orderSchema.find().countDocuments();
     const orders = await orderSchema.find();
-    return res.json(orders);
+    return res.json({ total, orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteOrder = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const orderId = req.params.orderId;
+    const theOrder = await orderSchema.findByIdAndRemove(orderId);
+    if (!theOrder) {
+      throw errorHandler.notFound('order');
+    }
+    return res.json('order served successfully');
   } catch (err) {
     next(err);
   }

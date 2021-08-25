@@ -9,6 +9,6 @@ router.get('/', isAdmin, orderController.getOrders);
 
 router.post('/', isAuthenticated, orderController.addOrder);
 
-// router.delete('/:itemId', isAdmin, orderController.deleteItem);
+router.delete('/:orderId', isAdmin, orderController.deleteOrder);
 
 module.exports = router;
