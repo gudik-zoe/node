@@ -13,6 +13,7 @@ exports.login = async (
 ) => {
   try {
     const receivedBody: LoginModel = req.body;
+    console.log(receivedBody);
     const theUser: UserModel = await User.findOne({
       email: receivedBody.email,
     });

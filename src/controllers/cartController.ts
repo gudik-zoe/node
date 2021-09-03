@@ -85,6 +85,31 @@ exports.getMyCart = async (
   }
 };
 
+exports.getMyCartLength = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const userId = tokenDecoder.getUserIdFromToken(req);
+    const signedInUser = await User.findById(userId);
+    if (!signedInUser) {
+      throw errorHandler.notFound('user');
+    }
+    const theCart = await Cart.findById(signedInUser.cart);
+    if (!theCart) {
+      throw errorHandler.notFound('cart');
+    }
+    let cardItemsNumber = 0;
+    for (let item of theCart.items) {
+      cardItemsNumber += Number(item.quantity);
+    }
+    return res.status(200).json(cardItemsNumber);
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.deleteItem = async (
   req: express.Request,
   res: express.Response,

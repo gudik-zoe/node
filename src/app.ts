@@ -12,9 +12,30 @@ const cartRouter = require('./routes/cartRouter');
 const itemRouter = require('./routes/itemRouter');
 const orderRouter = require('./routes/orderRouter');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const app = express();
-
+app.use(cors());
+// app.options('*', cors());
 app.use(express.json());
+
+// app.use(
+//   (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader(
+//       'Access-Control-Allow-Methods',
+//       'GET , POST , PUT , PATCH , DELETE'
+//     );
+//     res.setHeader(
+//       'Access-Control-Allow-Headers',
+//       'Content-Type, Authorization'
+//     );
+//     if (req.method === 'OPTIONS') {
+//       return res.sendStatus(200);
+//     }
+//     next();
+//   }
+// );
+
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/post', postRouter);
@@ -22,7 +43,7 @@ app.use('/menu', menuRouter);
 app.use('/appetizer', appetizerRouter);
 app.use('/drink', drinkRouter);
 app.use('/dessert', dessertRouter);
-app.use('/cart', cartRouter);
+app.use('/card', cartRouter);
 app.use('/item', itemRouter);
 app.use('/order', orderRouter);
 app.use(

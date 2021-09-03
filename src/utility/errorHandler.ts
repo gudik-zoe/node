@@ -29,18 +29,16 @@ exports.invalidCredentials = () => {
   return error;
 };
 
-exports.notAuthenticated = (message:string = "not authorised") => {
+exports.notAuthenticated = (
+  message: string = 'please sign in to be able to do this activity'
+) => {
   const error = new Error(message);
   error.statusCode = 401;
   return error;
 };
 
-
-exports.badRequest = (message:string = "bad request") => {
+exports.badRequest = (message: string = 'bad request') => {
   const error = new Error(message);
   error.statusCode = 400;
   return error;
 };
-
-
-

@@ -3,7 +3,6 @@ const itemController = require('../controllers/itemsController');
 const { body } = require('express-validator');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
-
 router.get('/', itemController.getItems);
 
 router.get('/:id', itemController.getItemById);

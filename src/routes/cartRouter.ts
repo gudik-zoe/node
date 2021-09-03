@@ -6,6 +6,8 @@ const router = Router();
 
 router.get('/', isAuthenticated, cartController.getMyCart);
 
+router.get('/cartLength', isAuthenticated, cartController.getMyCartLength);
+
 router.post('/', isAuthenticated, cartController.addItem);
 
 router.delete('/:itemId', isAuthenticated, cartController.deleteItem);

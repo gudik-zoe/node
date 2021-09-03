@@ -9,13 +9,14 @@ module.exports = (
 ) => {
   const authHeader: string | undefined = req.get('Authorization');
   let decodedToken: any;
-  if (!authHeader) {
+  if (!authHeader || authHeader === 'Bearer null') {
     throw errorHandler.notAuthenticated();
   }
+  console.log(authHeader);
   const token = authHeader.split(' ')[1];
   try {
     decodedToken = jwt.verify(token, 'secrettissimo');
-  } catch (err) {
+  } catch (err: any) {
     err.statusCode = 400;
     throw err;
   }
