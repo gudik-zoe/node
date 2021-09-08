@@ -42,3 +42,9 @@ exports.badRequest = (message: string = 'bad request') => {
   error.statusCode = 400;
   return error;
 };
+
+exports.tokenExpired = (message: string = 'token expired') => {
+  const error = new Error(message);
+  error.statusCode = 401;
+  return error;
+};

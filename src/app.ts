@@ -55,6 +55,7 @@ app.use(
   ) => {
     const status = error.statusCode || 500;
     const message = error.message || 'unknown error occured';
+    console.log(error);
     res
       .status(status)
       .json({ status, message, timeStamp: new Date(), data: error.data });

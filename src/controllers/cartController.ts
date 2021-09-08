@@ -72,6 +72,7 @@ exports.getMyCart = async (
   try {
     const userId = tokenDecoder.getUserIdFromToken(req);
     const signedInUser = await User.findById(userId);
+    console.log(signedInUser);
     if (!signedInUser) {
       throw errorHandler.notFound('user');
     }
@@ -81,6 +82,7 @@ exports.getMyCart = async (
     }
     res.status(200).json(theCart);
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };

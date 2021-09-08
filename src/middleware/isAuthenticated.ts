@@ -12,12 +12,11 @@ module.exports = (
   if (!authHeader || authHeader === 'Bearer null') {
     throw errorHandler.notAuthenticated();
   }
-  console.log(authHeader);
   const token = authHeader.split(' ')[1];
   try {
     decodedToken = jwt.verify(token, 'secrettissimo');
   } catch (err: any) {
-    err.statusCode = 400;
+    err.statusCode = 401;
     throw err;
   }
   if (!decodedToken) {
