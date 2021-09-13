@@ -72,7 +72,6 @@ exports.getMyCart = async (
   try {
     const userId = tokenDecoder.getUserIdFromToken(req);
     const signedInUser = await User.findById(userId);
-    console.log(signedInUser);
     if (!signedInUser) {
       throw errorHandler.notFound('user');
     }
@@ -108,6 +107,41 @@ exports.getMyCartLength = async (
     }
     return res.status(200).json(cardItemsNumber);
   } catch (err) {
+    next(err);
+  }
+};
+//i guess i have to loop in the received body and ASSIGN its items to the existed Card
+exports.modifyMyCard = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const userId = tokenDecoder.getUserIdFromToken(req);
+    const receivedBody = req.body;
+    const signedInUser = await User.findById(userId);
+    if (!signedInUser) {
+      throw errorHandler.notFound('user');
+    }
+    let oldCard = await Cart.findById(signedInUser.cart);
+    if (!oldCard) {
+      throw errorHandler.notFound('cart');
+    }
+
+    oldCard.items = [...receivedBody.items];
+    let total = 0;
+    for (let item of oldCard.items) {
+      let theItem = await Item.findById(item.itemId);
+      if (!theItem) {
+        throw errorHandler.notFound('item');
+      }
+      total += +theItem.price * +item.quantity;
+    }
+    oldCard.total = total;
+    const themodifiedCard = await oldCard.save();
+    res.status(200).json(themodifiedCard);
+  } catch (err) {
+    console.log(err);
     next(err);
   }
 };
@@ -151,7 +185,7 @@ exports.deleteItem = async (
     theCart.total = theCart.total - theItemToDelete.price * itemToDeleteQuanity;
     if (theCart.total < 0) {
       theCart.total = 0;
-      throw errorHandler.badRequest();
+      // throw errorHandler.badRequest();
     }
     const savedCard = await theCart.save();
     res.status(200).json(savedCard);
@@ -161,14 +195,14 @@ exports.deleteItem = async (
   }
 };
 
-async function getTotal(items: AddToCart[]): Promise<Number> {
-  let total = 0;
-  for (let item of items) {
-    const theItem = await Item.findById(item.itemId);
-    if (!theItem) {
-      throw errorHandler.notFound('item');
-    }
-    total += theItem.price * item.quantity;
-  }
-  return total;
-}
+// async function getTotal(items: AddToCart[]): Promise<Number> {
+//   let total = 0;
+//   for (let item of items) {
+//     const theItem = await Item.findById(item.itemId);
+//     if (!theItem) {
+//       throw errorHandler.notFound('item');
+//     }
+//     total += theItem.price * item.quantity;
+//   }
+//   return total;
+// }

@@ -8,6 +8,8 @@ router.get('/', isAuthenticated, cartController.getMyCart);
 
 router.get('/cartLength', isAuthenticated, cartController.getMyCartLength);
 
+router.put('/', isAuthenticated, cartController.modifyMyCard);
+
 router.post('/', isAuthenticated, cartController.addItem);
 
 router.delete('/:itemId', isAuthenticated, cartController.deleteItem);
