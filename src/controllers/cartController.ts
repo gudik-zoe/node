@@ -24,11 +24,9 @@ exports.addItem = async (
       throw errorHandler.notFound('user');
     }
     const theItem = await Item.findById(receivedBody.itemId);
-
     if (!theItem) {
       throw errorHandler.notFound();
     }
-
     let theCart;
     if (isValidObjectId(signedInUser.cart) && signedInUser.cart) {
       theCart = await Cart.findById(signedInUser.cart);
@@ -37,6 +35,7 @@ exports.addItem = async (
       }
     } else {
       theCart = new Cart();
+      theCart.total = 0;
       theCart.user = signedInUser.id;
       theCart.items = [];
     }
@@ -51,9 +50,9 @@ exports.addItem = async (
         itemId: receivedBody.itemId,
         quantity: receivedBody.quantity,
       });
-      theCart.total =
-        theCart.total || 0 + theItem.price * receivedBody.quantity;
+      theCart.total = theCart.total + theItem.price * receivedBody.quantity;
     }
+    console.log(theCart.total);
     const savedCard = await theCart.save();
     signedInUser.cart = savedCard.id;
     const savedUser = await signedInUser.save();
@@ -79,6 +78,7 @@ exports.getMyCart = async (
     if (!theCart) {
       throw errorHandler.notFound('cart');
     }
+
     res.status(200).json(theCart);
   } catch (err) {
     console.log(err);
