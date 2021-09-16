@@ -1,4 +1,3 @@
-import { error } from 'console';
 import * as express from 'express';
 import { isValidObjectId, ObjectId } from 'mongoose';
 import { AbstractMenu } from '../models/abstractMenu';
@@ -19,7 +18,6 @@ exports.addItem = async (
     const receivedBody: AddToCart = req.body;
     const userId = tokenDecoder.getUserIdFromToken(req);
     const signedInUser = await User.findById(userId);
-    console.log(receivedBody);
     if (!signedInUser) {
       throw errorHandler.notFound('user');
     }
@@ -52,13 +50,11 @@ exports.addItem = async (
       });
       theCart.total = theCart.total + theItem.price * receivedBody.quantity;
     }
-    console.log(theCart.total);
     const savedCard = await theCart.save();
     signedInUser.cart = savedCard.id;
     const savedUser = await signedInUser.save();
     res.status(200).json(savedCard);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
@@ -81,7 +77,6 @@ exports.getMyCart = async (
 
     res.status(200).json(theCart);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
@@ -141,7 +136,6 @@ exports.modifyMyCard = async (
     const themodifiedCard = await oldCard.save();
     res.status(200).json(themodifiedCard);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
@@ -166,11 +160,9 @@ exports.deleteItem = async (
     const itemToDeleteInCart = theCart.items.find(
       (i: any) => i.itemId == itemId
     );
-    console.log(itemToDeleteInCart);
     if (!itemToDeleteInCart) {
       throw errorHandler.notFound('item');
     }
-    console.log(itemToDeleteInCart.quantity);
     itemToDeleteQuanity = itemToDeleteInCart.quantity;
     const theItemToDelete = await Item.findById(itemId);
 
@@ -190,7 +182,6 @@ exports.deleteItem = async (
     const savedCard = await theCart.save();
     res.status(200).json(savedCard);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };

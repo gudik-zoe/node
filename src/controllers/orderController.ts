@@ -4,6 +4,7 @@ const tokenDecoder = require('../utility/tokenDecoder');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 const Cart = require('../collections/cart');
+
 exports.addOrder = async (
   req: express.Request,
   res: express.Response,
@@ -18,6 +19,9 @@ exports.addOrder = async (
     const theCart = await Cart.findById(theUser.cart);
     if (!theCart) {
       throw errorHandler.notFound('cart');
+    }
+    if (theCart.items.length == 0) {
+      throw errorHandler.badRequest('your card is empty!');
     }
     const order = new orderSchema();
     order.user = userId;
