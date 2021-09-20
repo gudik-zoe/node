@@ -26,6 +26,7 @@ exports.addOrder = async (
     const order = new orderSchema();
     order.user = userId;
     order.items = theCart.items;
+    order.total = theCart.total;
     const theOrder = await order.save();
     if (theOrder) {
       theCart.items = [];
