@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import * as express from 'express';
 import { UserModel } from '../models/user';
 const userController = require('../controllers/userController');
 const { body } = require('express-validator');
@@ -7,9 +6,9 @@ const User = require('../../dist/collections/user.js');
 const isAuth = require('../middleware/isAuthenticated');
 
 const router = Router();
-
+let password: string = '';
 router.post(
-  '/create',
+  '/signUp',
   [
     body('email')
       .isEmail()
@@ -29,6 +28,15 @@ router.post(
         'i'
       )
       .withMessage('password should be much more complicated '),
+    body('confirmPassword')
+      .trim()
+      .custom((confirmPassword: String, { req }) => {
+        if (req.body.password !== confirmPassword) {
+          return Promise.reject('password are not identical');
+        } else {
+          return true;
+        }
+      }),
   ],
   userController.createUser
 );

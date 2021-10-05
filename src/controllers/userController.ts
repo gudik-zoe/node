@@ -1,6 +1,7 @@
 import { UserModel } from '../models/user';
 import * as express from 'express';
 import { Role } from '../models/role';
+import { SignUp } from '../models/signup';
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const errorHandler = require('../utility/errorHandler');
@@ -16,10 +17,12 @@ exports.createUser = async (
     if (errorHandler.checkForError(req) != null) {
       throw errorHandler.checkForError(req);
     }
-    let receivedBody: UserModel = req.body;
+    let receivedBody: SignUp = req.body;
     const hashedPassword = await bcrypt.hash(receivedBody.password, 12);
     receivedBody.password = hashedPassword;
-    const theUser = new User(receivedBody);
+    const theUser = new User();
+    theUser.email = receivedBody.email;
+    theUser.password = hashedPassword;
     theUser.role = Role.USER;
     const savedUser = await theUser.save();
     return res.status(201).json(savedUser);

@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   firstName: {
     type: String,
-    required: true,
+    required: false,
   },
   lastName: {
     type: String,
-    required: true,
+    required: false,
   },
   email: {
     type: String,
@@ -19,11 +19,11 @@ const userSchema = new Schema({
   },
   profilePhoto: {
     type: String,
-    required: true,
+    required: false,
   },
   gender: {
     type: String,
-    required: true,
+    required: false,
   },
   from: {
     type: String,
@@ -42,7 +42,7 @@ const userSchema = new Schema({
     required: true,
   },
   cart: { type: Schema.Types.ObjectId, ref: 'Cart' },
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  // posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 });
 
 module.exports = mongoose.model('User', userSchema);
