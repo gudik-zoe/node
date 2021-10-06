@@ -2,6 +2,7 @@ import { UserModel } from '../models/user';
 import * as express from 'express';
 import { LoginModel } from '../models/login';
 import { SignUp } from '../models/signup';
+import { EmailCredentials } from '../credentials/emailcredentials';
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
@@ -21,10 +22,10 @@ exports.authenticateUser = async (
     }
     const transporter = nodemailer.createTransport({
       port: 465, // true for 465, false for other ports
-      host: 'smtp.gmail.com',
+      host: EmailCredentials.host,
       auth: {
-        user: 'tonykhoury993@gmail.com',
-        pass: 'mogmgngyclrkhtvj',
+        user: EmailCredentials.email,
+        pass: EmailCredentials.password,
       },
       secure: true,
     });
