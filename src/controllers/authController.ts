@@ -1,10 +1,54 @@
 import { UserModel } from '../models/user';
 import * as express from 'express';
 import { LoginModel } from '../models/login';
+import { SignUp } from '../models/signup';
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 var jwt = require('jsonwebtoken');
+
+const nodemailer = require('nodemailer');
+
+exports.authenticateUser = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  let receivedBody: SignUp = req.body;
+  try {
+    if (errorHandler.checkForError(req) != null) {
+      throw errorHandler.checkForError(req);
+    }
+    const transporter = nodemailer.createTransport({
+      port: 465, // true for 465, false for other ports
+      host: 'smtp.gmail.com',
+      auth: {
+        user: 'tonykhoury993@gmail.com',
+        pass: 'mogmgngyclrkhtvj',
+      },
+      secure: true,
+    });
+
+    const mailData = {
+      from: 'tonykhoury993@gmail.com', // sender address
+      to: receivedBody.email, // list of receivers
+      subject: 'register code',
+      text: 'Hey ' + receivedBody.email,
+      html: `<b>Hey there! </b>
+    <br>use this code to enter the Service 123456 <br/>`,
+    };
+    transporter.sendMail(mailData, function (error: any, info: any) {
+      if (error) {
+        console.log(error);
+        throw errorHandler.badRequest('email');
+      } else {
+        res.status(200).json('check your email ');
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.login = async (
   req: express.Request,

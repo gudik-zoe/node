@@ -27,16 +27,16 @@ router.post(
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
         'i'
       )
-      .withMessage('password should be much more complicated '),
-    body('confirmPassword')
-      .trim()
-      .custom((confirmPassword: String, { req }) => {
-        if (req.body.password !== confirmPassword) {
-          return Promise.reject('password are not identical');
-        } else {
-          return true;
-        }
-      }),
+      .withMessage('password should have at least 2 alphanumeric characters'),
+    // body('confirmPassword')
+    //   .trim()
+    //   .custom((confirmPassword: String, { req }) => {
+    //     if (req.body.password !== confirmPassword) {
+    //       return Promise.reject('password are not identical');
+    //     } else {
+    //       return true;
+    //     }
+    // }),
   ],
   userController.createUser
 );
