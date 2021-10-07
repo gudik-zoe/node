@@ -3,10 +3,13 @@ import * as express from 'express';
 import { LoginModel } from '../models/login';
 import { SignUp } from '../models/signup';
 import { EmailCredentials } from '../credentials/emailcredentials';
+import { Role } from '../models/role';
+import { ConfirmAuthentication } from '../models/confirmAuthentication';
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 var jwt = require('jsonwebtoken');
+const authUtility = require('../utility/authUtility');
 
 const nodemailer = require('nodemailer');
 
@@ -29,15 +32,23 @@ exports.authenticateUser = async (
       },
       secure: true,
     });
-
+    const temporaryPassword = authUtility.randomStringGenerator();
     const mailData = {
       from: 'tonykhoury993@gmail.com', // sender address
       to: receivedBody.email, // list of receivers
       subject: 'register code',
       text: 'Hey ' + receivedBody.email,
       html: `<b>Hey there! </b>
-    <br>use this code to enter the Service 123456 <br/>`,
+    <br>use this code to enter the Service ${temporaryPassword} <br/>`,
     };
+    const theUser = new User();
+    theUser.email = receivedBody.email;
+    const hashedPassword = await bcrypt.hash(receivedBody.password, 12);
+    theUser.password = hashedPassword;
+    theUser.temporaryPassword = temporaryPassword;
+    theUser.temporaryPasswordCreationTs = new Date();
+    theUser.role = Role.USER;
+    const savedUser = await theUser.save();
     transporter.sendMail(mailData, function (error: any, info: any) {
       if (error) {
         console.log(error);
@@ -46,6 +57,25 @@ exports.authenticateUser = async (
         res.status(200).json('check your email ');
       }
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.confirmAuthentication = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    if (errorHandler.checkForError(req) != null) {
+      throw errorHandler.checkForError(req);
+    }
+    let receivedBody: ConfirmAuthentication = req.body;
+    const theUser: UserModel = await User.findOne({
+      email: receivedBody.email,
+    });
+    authUtility.checkUserTemporaryPassword(receivedBody);
   } catch (err) {
     next(err);
   }

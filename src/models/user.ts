@@ -8,7 +8,7 @@ export class UserModel {
   confirmPassword!: String;
   gender?: String;
   temporaryPassword?: String;
-  temporaryPasswordCreationTs?: String;
+  temporaryPasswordCreationTs?: Date;
   profilePhoto?: String;
   from?: String;
   role?: String;

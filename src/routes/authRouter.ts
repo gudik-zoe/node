@@ -31,4 +31,6 @@ router.post(
 );
 router.post('/login', authController.login);
 
+router.post('/confirmAuthentication', authController.confirmAuthentication);
+
 module.exports = router;

@@ -34,7 +34,7 @@ const userSchema = new Schema({
     required: false,
   },
   temporaryPasswordCreationTs: {
-    type: String,
+    type: Date,
     required: false,
   },
   role: {
