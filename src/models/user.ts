@@ -1,15 +1,15 @@
 const { Role } = require('../models/role');
 export class UserModel {
-  id?: String;
-  firstName?: String;
-  lastName?: String;
-  email!: String;
-  password!: String;
-  confirmPassword!: String;
-  gender?: String;
-  temporaryPassword?: String;
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email!: string;
+  password!: string;
+  confirmPassword!: string;
+  gender?: string;
+  temporaryPassword?: string;
   temporaryPasswordCreationTs?: Date;
-  profilePhoto?: String;
-  from?: String;
-  role?: String;
+  profilePhoto?: string;
+  from?: string;
+  role?: string;
 }

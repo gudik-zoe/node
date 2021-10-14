@@ -75,7 +75,12 @@ exports.confirmAuthentication = async (
     const theUser: UserModel = await User.findOne({
       email: receivedBody.email,
     });
-    authUtility.checkUserTemporaryPassword(receivedBody);
+    if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
+      const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
+        expiresIn: '1h',
+      });
+      res.status(200).json({ token });
+    }
   } catch (err) {
     next(err);
   }

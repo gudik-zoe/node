@@ -1,6 +1,7 @@
 import { ConfirmAuthentication } from '../models/confirmAuthentication';
 import { UserModel } from '../models/user';
 const User = require('../collections/user');
+const errorHandler = require('../utility/errorHandler');
 exports.randomStringGenerator = () => {
   return (
     Math.random()
@@ -10,15 +11,38 @@ exports.randomStringGenerator = () => {
   );
 };
 
-exports.checkUserTemporaryPassword = async (body: ConfirmAuthentication) => {
-  const theUser: UserModel = await User.findOne({
-    email: body.email,
-  });
-  if (theUser.temporaryPasswordCreationTs) {
-    console.log(
-      (new Date().getTime() - theUser.temporaryPasswordCreationTs.getTime()) /
-        (1000 * 60)
-    );
+exports.checkUserTemporaryPassword = (
+  receivedBody: ConfirmAuthentication,
+  theUser: UserModel
+) => {
+  if (theUser.temporaryPasswordCreationTs && theUser.temporaryPassword) {
+    if (
+      checkValidity(theUser.temporaryPasswordCreationTs) &&
+      checkTemporaryPassword(
+        theUser.temporaryPassword,
+        receivedBody.temporaryPassword
+      )
+    ) {
+      return true;
+    }
   }
-  // if(theUser.temporaryPassword === body.temporaryPassword && theUser.temporaryPasswordCreationTs && (new Date().getTime() - theUser.temporaryPasswordCreationTs?.getTime()) )
 };
+
+function checkValidity(date: Date) {
+  if (Math.floor((new Date().getTime() - date.getTime()) / (1000 * 60)) < 5) {
+    return true;
+  }
+  throw errorHandler.badRequest(
+    'temporary password timeout click here generate a new temporary password'
+  );
+}
+
+function checkTemporaryPassword(
+  enteredTemporaryPassword: string,
+  dbTemporaryPassword: string
+) {
+  if (enteredTemporaryPassword === dbTemporaryPassword) {
+    return true;
+  }
+  throw errorHandler.badRequest('invalid temporary password');
+}
