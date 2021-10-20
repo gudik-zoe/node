@@ -7,6 +7,18 @@ const router = Router();
 router.post(
   '/authenticateUser',
   [
+    body('firstName')
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage('first name is too short')
+      .notEmpty()
+      .withMessage('first name should have a value'),
+    body('lastName')
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage('last name is too short')
+      .notEmpty()
+      .withMessage('last name should have a value'),
     body('email')
       .isEmail()
       .withMessage('insert valid email')

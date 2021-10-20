@@ -47,6 +47,8 @@ exports.authenticateUser = async (
     theUser.password = hashedPassword;
     theUser.temporaryPassword = temporaryPassword;
     theUser.temporaryPasswordCreationTs = new Date();
+    theUser.firstName = receivedBody.firstName;
+    theUser.lastName = receivedBody.lastName;
     theUser.role = Role.USER;
     const savedUser = await theUser.save();
     transporter.sendMail(mailData, function (error: any, info: any) {
@@ -72,13 +74,19 @@ exports.confirmAuthentication = async (
       throw errorHandler.checkForError(req);
     }
     let receivedBody: ConfirmAuthentication = req.body;
-    const theUser: UserModel = await User.findOne({
+    let theUser = await User.findOne({
       email: receivedBody.email,
     });
+    if (!theUser) {
+      throw errorHandler.notFound('user');
+    }
     if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
       const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
         expiresIn: '1h',
       });
+      theUser.temporaryPassword = '';
+      theUser.temporaryPasswordCreationTs = undefined;
+      const newUser = await theUser.save();
       res.status(200).json({ token });
     }
   } catch (err) {
