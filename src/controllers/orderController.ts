@@ -4,6 +4,7 @@ const tokenDecoder = require('../utility/tokenDecoder');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 const Cart = require('../collections/cart');
+const io = require('../socket');
 
 exports.addOrder = async (
   req: express.Request,
@@ -33,13 +34,33 @@ exports.addOrder = async (
       theCart.total = 0;
       const savedCart = await theCart.save();
     }
-    return res.json(theOrder);
+    io.getIO().emit('addOrder', { action: 'create', order: theOrder });
+    return res.status(200).json(theOrder);
   } catch (err) {
     next(err);
   }
 };
 
-exports.getOrders = async (
+exports.getMyOrders = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const userId = tokenDecoder.getUserIdFromToken(req);
+    const signedInUser = await User.findById(userId);
+    if (!signedInUser) {
+      throw errorHandler.notFound('user');
+    }
+    // const total = await orderSchema.find().countDocuments();
+    const orders = await orderSchema.find({ user: userId });
+    return res.json(orders);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getAllOrders = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction

@@ -49,6 +49,14 @@ mongoose
   )
   .then((result: any) => {
     console.log('success');
-    app.listen(3000);
+    const server = app.listen(3000);
+    const io = require('./socket').init(server, {
+      cors: {
+        origin: '*',
+      },
+    });
+    io.on('connection', (socket: any) => {
+      console.log('client connected');
+    });
   })
   .catch((err: any) => console.log(err));

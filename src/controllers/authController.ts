@@ -81,9 +81,14 @@ exports.confirmAuthentication = async (
       throw errorHandler.notFound('user');
     }
     if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
-      const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
-        expiresIn: '1h',
-      });
+      const token = jwt.sign(
+        { userId: theUser.id },
+        { role: theUser.role },
+        'secrettissimo',
+        {
+          expiresIn: '1h',
+        }
+      );
       theUser.temporaryPassword = '';
       theUser.temporaryPasswordCreationTs = undefined;
       const newUser = await theUser.save();
@@ -101,7 +106,6 @@ exports.login = async (
 ) => {
   try {
     const receivedBody: LoginModel = req.body;
-    console.log(receivedBody);
     const theUser: UserModel = await User.findOne({
       email: receivedBody.email,
     });
@@ -118,7 +122,7 @@ exports.login = async (
     const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
       expiresIn: '1h',
     });
-    res.status(200).json({ token });
+    res.status(200).json({ token, role: theUser.role });
   } catch (err) {
     next(err);
   }
