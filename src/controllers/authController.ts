@@ -81,20 +81,23 @@ exports.confirmAuthentication = async (
       throw errorHandler.notFound('user');
     }
     if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
+      console.log(theUser.id + " " +theUser.role )
       const token = jwt.sign(
         { userId: theUser.id },
-        { role: theUser.role },
+        // { role: theUser.role },
         'secrettissimo',
         {
           expiresIn: '1h',
         }
       );
+      console.log(token)
       theUser.temporaryPassword = '';
       theUser.temporaryPasswordCreationTs = undefined;
       const newUser = await theUser.save();
       res.status(200).json({ token });
     }
   } catch (err) {
+    console.log("here " + err)
     next(err);
   }
 };

@@ -20,7 +20,7 @@ app.use(express.json());
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 // app.use('/post', postRouter);
-app.use('/menu', menuRouter);
+// app.use('/menu', menuRouter);
 app.use('/appetizer', appetizerRouter);
 app.use('/drink', drinkRouter);
 app.use('/dessert', dessertRouter);
