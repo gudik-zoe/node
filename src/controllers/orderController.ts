@@ -28,6 +28,7 @@ exports.addOrder = async (
     order.user = userId;
     order.items = theCart.items;
     order.total = theCart.total;
+    order.status = null;
     const theOrder = await order.save();
     if (theOrder) {
       theCart.items = [];
@@ -52,7 +53,6 @@ exports.getMyOrders = async (
     if (!signedInUser) {
       throw errorHandler.notFound('user');
     }
-    // const total = await orderSchema.find().countDocuments();
     const orders = await orderSchema.find({ user: userId });
     return res.json(orders);
   } catch (err) {
@@ -69,6 +69,26 @@ exports.getAllOrders = async (
     const total = await orderSchema.find().countDocuments();
     const orders = await orderSchema.find();
     return res.json({ total, orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.editOrderStatus = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const orderId = req.params.orderId;
+    const theOrder = await orderSchema.findById(orderId);
+    if (!theOrder) {
+      throw errorHandler.notFound('order');
+    }
+    theOrder.status = 'preparing';
+    const editedOrder = await theOrder.save();
+    io.getIO().emit('editOrder', { action: 'edit', order: editedOrder });
+    return res.status(200).json(editedOrder);
   } catch (err) {
     next(err);
   }

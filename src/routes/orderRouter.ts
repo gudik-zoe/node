@@ -11,6 +11,12 @@ router.get('/', isAuthenticated, orderController.getMyOrders);
 
 router.post('/', isAuthenticated, orderController.addOrder);
 
+router.put(
+  '/:orderId',
+  //  isAdmin
+  orderController.editOrderStatus
+);
+
 router.delete('/:orderId', isAdmin, orderController.deleteOrder);
 
 module.exports = router;

@@ -6,6 +6,10 @@ const orderSchema = new Schema({
     ref: 'User',
     required: true,
   },
+  status: {
+    type: String,
+    required: false,
+  },
   items: [
     {
       itemId: {

@@ -81,7 +81,7 @@ exports.confirmAuthentication = async (
       throw errorHandler.notFound('user');
     }
     if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
-      console.log(theUser.id + " " +theUser.role )
+      console.log(theUser.id + ' ' + theUser.role);
       const token = jwt.sign(
         { userId: theUser.id },
         // { role: theUser.role },
@@ -90,14 +90,14 @@ exports.confirmAuthentication = async (
           expiresIn: '1h',
         }
       );
-      console.log(token)
+      console.log(token);
       theUser.temporaryPassword = '';
       theUser.temporaryPasswordCreationTs = undefined;
       const newUser = await theUser.save();
       res.status(200).json({ token });
     }
   } catch (err) {
-    console.log("here " + err)
+    console.log('here ' + err);
     next(err);
   }
 };
@@ -125,7 +125,7 @@ exports.login = async (
     const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
       expiresIn: '1h',
     });
-    res.status(200).json({ token, role: theUser.role });
+    res.status(200).json({ token, user: theUser });
   } catch (err) {
     next(err);
   }
