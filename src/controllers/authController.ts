@@ -125,7 +125,7 @@ exports.login = async (
     const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
       expiresIn: '1h',
     });
-    res.status(200).json({ token, user: theUser });
+    res.status(200).json({ token, role: theUser.role });
   } catch (err) {
     next(err);
   }
