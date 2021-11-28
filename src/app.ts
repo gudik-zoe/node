@@ -56,7 +56,6 @@ mongoose
       },
     });
     io.on('connection', (socket: any) => {
-      console.log('client connected');
     });
   })
   .catch((err: any) => console.log(err));

@@ -81,11 +81,12 @@ exports.editOrderStatus = async (
 ) => {
   try {
     const orderId = req.params.orderId;
+    const orderStatus = req.params.status
     const theOrder = await orderSchema.findById(orderId);
     if (!theOrder) {
       throw errorHandler.notFound('order');
     }
-    theOrder.status = 'preparing';
+    theOrder.status = orderStatus;
     const editedOrder = await theOrder.save();
     io.getIO().emit('editOrder', { action: 'edit', order: editedOrder });
     return res.status(200).json(editedOrder);

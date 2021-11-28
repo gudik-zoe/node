@@ -12,7 +12,7 @@ router.get('/', isAuthenticated, orderController.getMyOrders);
 router.post('/', isAuthenticated, orderController.addOrder);
 
 router.put(
-  '/:orderId',
+  '/:orderId/:status',
   //  isAdmin
   orderController.editOrderStatus
 );
