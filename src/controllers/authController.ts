@@ -20,7 +20,7 @@ exports.authenticateUser = async (
 ) => {
   let receivedBody: SignUp = req.body;
   try {
-    if (errorHandler.checkForError(req) != null) {
+    if (!errorHandler.checkForError(req).isEmpty()) {
       throw errorHandler.checkForError(req);
     }
     const transporter = nodemailer.createTransport({
@@ -51,6 +51,9 @@ exports.authenticateUser = async (
     theUser.lastName = receivedBody.lastName;
     theUser.role = Role.USER;
     const savedUser = await theUser.save();
+    // if(savedUser) {
+
+    // }
     transporter.sendMail(mailData, function (error: any, info: any) {
       if (error) {
         console.log(error);

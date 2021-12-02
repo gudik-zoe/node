@@ -13,7 +13,7 @@ module.exports = async (
   try {
     const userId = tokenDecoder.getUserIdFromToken(req);
     const theUser = await User.findById(userId);
-    if (theUser.role !== Role.ADMIN) {
+    if (theUser && theUser.role !== Role.ADMIN) {
       throw errorHandler.notAuthenticated(
         'u should sign in as admin to do this'
       );

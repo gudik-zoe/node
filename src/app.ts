@@ -1,6 +1,6 @@
 import { HookNextFunction } from 'mongoose';
 import express from 'express';
-import { Error } from './models/error';
+import { CustomeError } from './models/customError';
 const userRouter = require('./routes/userRouter');
 const authRouter = require('./routes/authRouter');
 const postRouter = require('./routes/postRouter');
@@ -29,12 +29,12 @@ app.use('/item', itemRouter);
 app.use('/order', orderRouter);
 app.use(
   (
-    error: Error,
+    error: CustomeError,
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) => {
-    const status = error.statusCode || 500;
+    const status = error.status || 500;
     const message = error.message || 'unknown error occured';
     console.log(error);
     res
@@ -55,7 +55,6 @@ mongoose
         origin: '*',
       },
     });
-    io.on('connection', (socket: any) => {
-    });
+    io.on('connection', (socket: any) => {});
   })
   .catch((err: any) => console.log(err));
