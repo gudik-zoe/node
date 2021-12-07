@@ -125,9 +125,13 @@ exports.login = async (
     if (!passwordIsvalid) {
       throw errorHandler.invalidCredentials();
     }
-    const token = jwt.sign({ userId: theUser.id }, 'secrettissimo', {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      { userId: theUser.id, role: theUser.role },
+      'secrettissimo',
+      {
+        expiresIn: '1h',
+      }
+    );
     res.status(200).json({ token, role: theUser.role });
   } catch (err) {
     next(err);

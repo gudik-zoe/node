@@ -5,6 +5,38 @@ import { Category } from '../models/category';
 const itemSchema = require('../collections/item');
 const errorHandler = require('../utility/errorHandler');
 
+exports.getAllItems = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const limit: number = Number(req.query.limit) || 4;
+    const start: number = Number(req.query.start) || 1;
+    let total: Number;
+    total = await itemSchema.find().countDocuments();
+    const result = await itemSchema.find();
+    // if (!category) {
+    //   result = await itemSchema
+    //     .find()
+    //     .skip(start - 1)
+    //     .limit(limit);
+    // } else {
+    //   total = await itemSchema.find({ category }).countDocuments();
+    //   result = await itemSchema
+    //     .find({ category })
+    //     .skip(start - 1)
+    //     .limit(limit);
+    // }
+    if (!result) {
+      throw errorHandler.notFound();
+    }
+    return res.status(200).json({ total, start, limit, result });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getItems = async (
   req: express.Request,
   res: express.Response,

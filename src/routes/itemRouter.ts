@@ -3,6 +3,8 @@ const itemController = require('../controllers/itemsController');
 const { body } = require('express-validator');
 const isAdmin = require('../middleware/isAdmin');
 const router = Router();
+
+router.get('/all', itemController.getAllItems);
 router.get('/', itemController.getItems);
 
 router.get('/:id', itemController.getItemById);
