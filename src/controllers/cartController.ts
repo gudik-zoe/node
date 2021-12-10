@@ -1,8 +1,6 @@
 import * as express from 'express';
 import { isValidObjectId, ObjectId } from 'mongoose';
-import { AbstractMenu } from '../models/abstractMenu';
 import { AddToCart } from '../models/addToCart';
-const bcrypt = require('bcryptjs');
 const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 const Cart = require('../collections/cart');
