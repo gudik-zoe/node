@@ -1,9 +1,13 @@
 import { Router } from 'express';
 import { UserModel } from '../models/user';
 const authController = require('../controllers/authController');
+const isAuthenticated = require('../middleware/isAuthenticated');
 const { body } = require('express-validator');
 const User = require('../../dist/collections/user.js');
 const router = Router();
+
+
+router.get('/role', isAuthenticated ,authController.getUserRole);
 router.post(
   '/authenticateUser',
   [
@@ -41,6 +45,7 @@ router.post(
   ],
   authController.authenticateUser
 );
+
 router.post('/login', authController.login);
 
 router.post('/confirmauthentication', authController.confirmAuthentication);

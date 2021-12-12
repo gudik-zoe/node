@@ -55,6 +55,7 @@ mongoose
         origin: '*',
       },
     });
-    io.on('connection', (socket: any) => {});
+    io.on('connection', (socket: any) => { 
+    });
   })
   .catch((err: any) => console.log(err));

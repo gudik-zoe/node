@@ -13,6 +13,17 @@ const authUtility = require('../utility/authUtility');
 
 const nodemailer = require('nodemailer');
 
+exports.getUserRole = async (  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction) => {
+    try{
+      
+
+    }catch(err){
+      next(err)
+    }
+  }
+
 exports.authenticateUser = async (
   req: express.Request,
   res: express.Response,
