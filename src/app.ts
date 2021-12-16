@@ -11,6 +11,7 @@ const dessertRouter = require('./routes/dessertRouter');
 const cartRouter = require('./routes/cartRouter');
 const itemRouter = require('./routes/itemRouter');
 const orderRouter = require('./routes/orderRouter');
+const chatRouter = require('./routes/chatRouter');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
@@ -27,6 +28,7 @@ app.use('/dessert', dessertRouter);
 app.use('/card', cartRouter);
 app.use('/item', itemRouter);
 app.use('/order', orderRouter);
+app.use('/chat', chatRouter);
 app.use(
   (
     error: CustomeError,

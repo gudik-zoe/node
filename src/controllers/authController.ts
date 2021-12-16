@@ -20,7 +20,7 @@ exports.authenticateUser = async (
 ) => {
   let receivedBody: SignUp = req.body;
   try {
-    if (!errorHandler.checkForError(req).isEmpty()) {
+    if (errorHandler.checkForError(req)) {
       throw errorHandler.checkForError(req);
     }
     const transporter = nodemailer.createTransport({
@@ -56,7 +56,6 @@ exports.authenticateUser = async (
     // }
     transporter.sendMail(mailData, function (error: any, info: any) {
       if (error) {
-        console.log(error);
         throw errorHandler.badRequest('email');
       } else {
         res.status(200).json('check your email ');
@@ -84,7 +83,6 @@ exports.confirmAuthentication = async (
       throw errorHandler.notFound('user');
     }
     if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
-      console.log(theUser.id + ' ' + theUser.role);
       const token = jwt.sign(
         { userId: theUser.id },
         // { role: theUser.role },
@@ -93,14 +91,12 @@ exports.confirmAuthentication = async (
           expiresIn: '1h',
         }
       );
-      console.log(token);
       theUser.temporaryPassword = '';
       theUser.temporaryPasswordCreationTs = undefined;
       const newUser = await theUser.save();
       res.status(200).json({ token });
     }
   } catch (err) {
-    console.log('here ' + err);
     next(err);
   }
 };
