@@ -34,7 +34,7 @@ exports.authenticateUser = async (
 ) => {
   let receivedBody: SignUp = req.body;
   try {
-    if (!errorHandler.checkForError(req).isEmpty()) {
+    if (errorHandler.checkForError(req)) {
       throw errorHandler.checkForError(req);
     }
     const transporter = nodemailer.createTransport({

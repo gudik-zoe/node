@@ -3,10 +3,10 @@ import { CustomeError } from '../models/customError';
 import * as express from 'express';
 
 exports.checkForError = (req: express.Request) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+  const theValidationResult = validationResult(req);
+  if (theValidationResult.errors && theValidationResult.errors.length) {
     const errorsMessage = [];
-    for (let error of errors.array()) {
+    for (let error of theValidationResult.errors) {
       errorsMessage.push(error.msg);
     }
     const error = new CustomeError(
