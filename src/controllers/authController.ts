@@ -10,15 +10,18 @@ const errorHandler = require('../utility/errorHandler');
 const User = require('../collections/user');
 var jwt = require('jsonwebtoken');
 const authUtility = require('../utility/authUtility');
-
+const tokenDecoder = require('../utility/tokenDecoder');
 const nodemailer = require('nodemailer');
 
-exports.getUserRole = async (  req: express.Request,
+exports.getUserData = async (  req: express.Request,
   res: express.Response,
   next: express.NextFunction) => {
     try{
-      
-
+    const userData =  tokenDecoder.getUserData(req)
+      if(userData){
+        console.log(userData)
+       res.status(200).json(userData);
+      }
     }catch(err){
       next(err)
     }
@@ -67,7 +70,6 @@ exports.authenticateUser = async (
     // }
     transporter.sendMail(mailData, function (error: any, info: any) {
       if (error) {
-        console.log(error);
         throw errorHandler.badRequest('email');
       } else {
         res.status(200).json('check your email ');
@@ -95,7 +97,6 @@ exports.confirmAuthentication = async (
       throw errorHandler.notFound('user');
     }
     if (authUtility.checkUserTemporaryPassword(receivedBody, theUser)) {
-      console.log(theUser.id + ' ' + theUser.role);
       const token = jwt.sign(
         { userId: theUser.id },
         // { role: theUser.role },
@@ -104,14 +105,12 @@ exports.confirmAuthentication = async (
           expiresIn: '1h',
         }
       );
-      console.log(token);
       theUser.temporaryPassword = '';
       theUser.temporaryPasswordCreationTs = undefined;
       const newUser = await theUser.save();
       res.status(200).json({ token });
     }
   } catch (err) {
-    console.log('here ' + err);
     next(err);
   }
 };

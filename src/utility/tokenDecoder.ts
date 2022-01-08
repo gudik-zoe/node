@@ -38,7 +38,7 @@ exports.getUserIdFromToken = (req: express.Request) => {
 //   }
 // };
 
-exports.getUserRole = (req: express.Request) =>{
+exports.getUserData = (req: express.Request) =>{
   const decodedToken = getTokenFromHeader(req)
-   decodedToken.role ? decodedToken.role:null
+ return  decodedToken
 }

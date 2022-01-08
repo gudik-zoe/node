@@ -7,7 +7,7 @@ const User = require('../../dist/collections/user.js');
 const router = Router();
 
 
-router.get('/role', isAuthenticated ,authController.getUserRole);
+router.get('/userData', isAuthenticated ,authController.getUserData);
 router.post(
   '/authenticateUser',
   [
