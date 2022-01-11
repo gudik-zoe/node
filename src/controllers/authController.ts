@@ -13,19 +13,18 @@ const authUtility = require('../utility/authUtility');
 const tokenDecoder = require('../utility/tokenDecoder');
 const nodemailer = require('nodemailer');
 
-exports.getUserData = async (  req: express.Request,
+exports.getUserData = async (req: express.Request,
   res: express.Response,
   next: express.NextFunction) => {
-    try{
-    const userData =  tokenDecoder.getUserData(req)
-      if(userData){
-        console.log(userData)
-       res.status(200).json(userData);
-      }
-    }catch(err){
-      next(err)
+  try {
+    const userData = tokenDecoder.getUserData(req)
+    if (userData) {
+      res.status(200).json(userData);
     }
+  } catch (err) {
+    next(err)
   }
+}
 
 exports.authenticateUser = async (
   req: express.Request,
